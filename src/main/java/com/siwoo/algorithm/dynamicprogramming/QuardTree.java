@@ -15,18 +15,34 @@ public class QuardTree {
 
     char[][] DECOMPRESSED = new char[16][16];
     int pointer = 0;
+
     public static void main(String[] args) {
         QuardTree quardTree = new QuardTree();
         quardTree.decompressed("xxwwwbxwxwbbbwwxxxwwbbbwwwwbb", 0, 0, 16);
+        quardTree.pointer = 0;
+        System.out.println(quardTree.reverse("xxwwwbxwxwbbbwwxxxwwbbbwwwwbb"));
+    }
+
+    private String reverse(String s) {
+        char head = s.charAt(pointer++);
+        if (head == 'b' || head == 'w') {
+          return head + "";
+        } else {
+            String tl = reverse(s);
+            String tr = reverse(s);
+            String bl = reverse(s);
+            String br = reverse(s);
+            return "x" + bl + br + tl + tr;
+        }
     }
 
     private void decompressed(String s, int y, int x, int size) {
         char head = s.charAt(pointer++);
-        if (head == 'w' || head == 'b') {
+        if (head == 'b' || head == 'w')
             for (int dy=0; dy<size; dy++)
                 for (int dx=0; dx<size; dx++)
-                    DECOMPRESSED[dy+y][dx+x] = head;
-        } else {
+                    DECOMPRESSED[dy][dx] = head;
+        else {
             int half = size / 2;
             decompressed(s, y, x, half);
             decompressed(s, y, x+half, half);
