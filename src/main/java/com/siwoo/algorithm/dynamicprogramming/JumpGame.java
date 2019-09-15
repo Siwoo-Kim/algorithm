@@ -40,4 +40,5 @@ public class JumpGame {
         return jump(y+BOARD[y][x], x) || jump(y, x+BOARD[y][x]);
     }
 
+
 }

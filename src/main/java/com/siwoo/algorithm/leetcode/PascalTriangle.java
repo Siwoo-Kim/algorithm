@@ -1,44 +1,60 @@
 package com.siwoo.algorithm.leetcode;
 
-import com.google.common.primitives.Ints;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class PascalTriangle {
     static class Solution {
-
+        private int ROWS = 5;
         public static void main(String[] args) {
             Solution solution = new Solution();
-            solution.generate(5);
+            System.out.println(solution.asList(solution.generate2(1, new int[5][5])));
+        }
+
+        private int[][] generate2(int row, int[][] rows) {
+            if (row > ROWS) return rows;
+            int[] r = new int[row];
+            r[0] = r[row-1] = 1;
+            for (int i=1; i<row-1; i++) {
+                r[i] = rows[row-2][i-1] + rows[row-2][i];
+            }
+            rows[row-1] = r;
+            return generate2(row+1, rows);
+        }
+
+        private List<List<Integer>> asList(int[][] a) {
+            List<List<Integer>> list = new ArrayList<>();
+            for (int[] row : a) {
+                List<Integer> rRow = new ArrayList<>();
+                for (int i: row) {
+                    rRow.add(i);
+                }
+                list.add(rRow);
+            }
+            return list;
         }
 
         public List<List<Integer>> generate(int numRows) {
-            return generate(1, numRows, new ArrayList<>());
-        }
-
-        private List<List<Integer>> generate(int row, int numRows, List<List<Integer>> lists) {
-            if (row == numRows+1) return lists;
-            int[] r = new int[row];
-            int start = 0;
-            int end = r.length - 1;
-            r[start] = 1;
-            r[end] = 1;
-            List<Integer> beforeRow = lists.isEmpty() ? Collections.emptyList(): lists.get(row-2);
-            for (int i=0; i<end && i<lists.size()-1; i++) {
-                r[i+1] = beforeRow.get(i) + beforeRow.get(i+1);
+            if (numRows == 0) return new ArrayList<>();
+            int[][] r = new int[numRows][numRows];
+            for (int i=0; i<numRows; i++) {
+                r[i] = new int[i+1];
+                r[i][0] = 1;
+                r[i][i] = 1;
+                for (int j=1; j<r[i].length-1; j++) {
+                    r[i][j] = r[i-1][j-1] + r[i-1][j];
+                }
             }
-            lists.add(asList(r));
-            return generate(row+1, numRows, lists);
+            List<List<Integer>> list = new ArrayList<>();
+            for (int[] row : r) {
+                List<Integer> rRow = new ArrayList<>();
+                for (int i: row) {
+                    rRow.add(i);
+                }
+                list.add(rRow);
+            }
+            return list;
         }
 
-        private static List<Integer> asList(int[] a) {
-            List<Integer> r = new ArrayList<>();
-            for (int e: a)
-                r.add(e);
-            return r;
-        }
     }
 }
